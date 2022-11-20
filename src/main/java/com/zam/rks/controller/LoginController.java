@@ -1,8 +1,7 @@
 package com.zam.rks.controller;
 
 import com.zam.rks.Service.UserService;
-import com.zam.rks.model.User;
-import com.zam.rks.security.configuration.LoginCredentials;
+import com.zam.rks.model.LoginCredentials;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -23,7 +22,7 @@ public class LoginController {
 	}
 
 	@PutMapping("/register")
-	public ResponseEntity<String> register(@RequestBody User user) {
+	public ResponseEntity<String> register(@RequestBody LoginCredentials user) {
 		return userService.saveNewUser(user);
 	}
 

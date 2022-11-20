@@ -15,6 +15,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -25,30 +27,41 @@ public class User implements UserDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	private String username;
+	private String email;
 	private String password;
 	private String firstName;
 	private String lastName;
 	private Date birthdate;
-	private String email;
 	private String phoneNumber;
 	@Column(columnDefinition = "TIMESTAMP default CURRENT_TIMESTAMP")
 	private Timestamp creationTime;
 	private Boolean enabled = false;
-	private Boolean locked = false;
+	private final Boolean locked = false;
 	@Enumerated(EnumType.STRING)
 	private UserRole role;
 
-	public User(String username, String password, String firstName, String lastName, Date birthdate, String email, String phoneNumber, UserRole role) {
-		this.username = username;
+	public User(String email, String password, String firstName, String lastName, Date birthdate, String phoneNumber, UserRole role) {
+		this.email = email;
 		this.password = password;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.birthdate = birthdate;
-		this.email = email;
 		this.phoneNumber = phoneNumber;
 		this.role = role;
 		this.enabled = true;
+		this.creationTime = new Timestamp(ZonedDateTime.now(ZoneId.of("Europe/Warsaw")).toInstant().toEpochMilli());
+	}
+
+	public User(String email, String password) {
+		this.email = email;
+		this.password = password;
+		this.firstName = "";
+		this.lastName = "";
+		this.birthdate = null;
+		this.phoneNumber = "";
+		this.role = UserRole.ROLE_USER;
+		this.enabled = true;
+		this.creationTime = new Timestamp(ZonedDateTime.now(ZoneId.of("Europe/Warsaw")).toInstant().toEpochMilli());
 	}
 
 	public User() {
@@ -69,7 +82,7 @@ public class User implements UserDetails {
 	}
 
 	public String getUsername() {
-		return username;
+		return email;
 	}
 
 	public void setPassword(String password) {
@@ -98,14 +111,6 @@ public class User implements UserDetails {
 
 	public void setBirthdate(Date birthdate) {
 		this.birthdate = birthdate;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
 	}
 
 	public String getPhoneNumber() {

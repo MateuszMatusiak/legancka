@@ -1,14 +1,11 @@
 package com.zam.rks.model;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.sql.Timestamp;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.Objects;
 
 @Entity
@@ -19,7 +16,6 @@ public class Dictionary {
 	private int id;
 	private String entry;
 	private String description;
-	@Column(columnDefinition = "TIMESTAMP default CURRENT_TIMESTAMP")
 	private Timestamp creationTime;
 
 	public Dictionary() {
@@ -28,7 +24,6 @@ public class Dictionary {
 	public Dictionary(String entry, String description) {
 		this.entry = entry;
 		this.description = description;
-		this.creationTime = new Timestamp(ZonedDateTime.now(ZoneId.of("Europe/Warsaw")).toInstant().toEpochMilli());
 	}
 
 	@Override

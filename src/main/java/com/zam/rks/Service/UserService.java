@@ -1,8 +1,8 @@
 package com.zam.rks.Service;
 
 import com.zam.rks.Repository.UserRepository;
+import com.zam.rks.model.LoginCredentials;
 import com.zam.rks.model.User;
-import com.zam.rks.model.UserRole;
 import com.zam.rks.security.PasswordEncoder;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
@@ -26,12 +26,12 @@ public class UserService implements UserDetailsService {
 		this.passwordEncoder = passwordEncoder;
 	}
 
-	public ResponseEntity<String> saveNewUser(User user) {
-		Optional<User> test = userRepository.findByUsername(user.getUsername());
+	public ResponseEntity<String> saveNewUser(LoginCredentials user) {
+		Optional<User> test = userRepository.findByEmail(user.getEmail());
 		if (test.isPresent()) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body("User already exists");
 		}
-		User userToSave = new User(user.getUsername(), passwordEncoder.encode(user.getPassword()), user.getFirstName(), user.getLastName(), user.getBirthdate(), user.getEmail(), user.getPhoneNumber(), UserRole.ROLE_USER);
+		User userToSave = new User(user.getEmail(), passwordEncoder.encode(user.getPassword()));
 		userRepository.save(userToSave);
 		return ResponseEntity.status(HttpStatus.OK).body("Successfully registered");
 
@@ -39,7 +39,7 @@ public class UserService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		return userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+		return userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 	}
 
 }

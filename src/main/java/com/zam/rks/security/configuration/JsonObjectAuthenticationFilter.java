@@ -1,6 +1,7 @@
 package com.zam.rks.security.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zam.rks.model.LoginCredentials;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -30,7 +31,7 @@ public class JsonObjectAuthenticationFilter extends UsernamePasswordAuthenticati
 			}
 			LoginCredentials authRequest = objectMapper.readValue(sb.toString(), LoginCredentials.class);
 			UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-					authRequest.getUsername(), authRequest.getPassword()
+					authRequest.getEmail(), authRequest.getPassword()
 			);
 			setDetails(request, token);
 			return this.getAuthenticationManager().authenticate(token);
