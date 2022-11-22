@@ -1,25 +1,31 @@
 package com.zam.rks.controller;
 
 import com.zam.rks.Service.UserService;
+import com.zam.rks.model.Group;
 import com.zam.rks.model.User;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import java.util.Set;
 
 @RestController
 public class UserController {
 
-	UserService userService;
+	private final UserService userService;
 
 	public UserController(UserService userService) {
 		this.userService = userService;
 	}
 
-//	@GetMapping("/getUsers")
-//	public List<User> getUsers() {
-//		return userService.getUsers();
-//	}
+	@GetMapping("/groups")
+	public Set<Group> getGroupsForUser() {
+		return userService.getGroupsForUser();
+	}
 
-
+	@PostMapping("/user")
+	public User updateUser(@RequestBody User user) {
+		return userService.updateUser(user);
+	}
 }

@@ -1,7 +1,7 @@
 package com.zam.rks.security.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zam.rks.Service.UserService;
+import com.zam.rks.Service.LoginService;
 import com.zam.rks.security.PasswordEncoder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -23,17 +23,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	private final RestAuthenticationSuccessHandler successHandler;
 	private final RestAuthenticationFailureHandler failureHandler;
 	private final String secret;
-	private final UserService userService;
+	private final LoginService loginService;
 	private final PasswordEncoder passwordEncoder;
 
 
 	public WebSecurityConfig(PasswordEncoder passwordEncoder, ObjectMapper objectMapper, RestAuthenticationSuccessHandler successHandler,
-							 RestAuthenticationFailureHandler failureHandler, UserService userService,
+							 RestAuthenticationFailureHandler failureHandler, LoginService loginService,
 							 @Value("${jwt.secret}") String secret) {
 		this.objectMapper = objectMapper;
 		this.successHandler = successHandler;
 		this.failureHandler = failureHandler;
-		this.userService = userService;
+		this.loginService = loginService;
 		this.secret = secret;
 		this.passwordEncoder = passwordEncoder;
 	}
@@ -58,7 +58,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 				.and()
 				.addFilter(authenticationFilter())
-				.addFilter(new JwtAuthorizationFilter(authenticationManager(), userService, secret))
+				.addFilter(new JwtAuthorizationFilter(authenticationManager(), loginService, secret))
 				.exceptionHandling()
 				.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
 				.and()
@@ -78,7 +78,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		DaoAuthenticationProvider provider =
 				new DaoAuthenticationProvider();
 		provider.setPasswordEncoder(passwordEncoder);
-		provider.setUserDetailsService(userService);
+		provider.setUserDetailsService(loginService);
 		return provider;
 	}
 }

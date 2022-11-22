@@ -1,47 +1,45 @@
 package com.zam.rks.Service;
 
 import com.zam.rks.Repository.UserRepository;
-import com.zam.rks.model.LoginCredentials;
+import com.zam.rks.model.Group;
 import com.zam.rks.model.User;
-import com.zam.rks.security.PasswordEncoder;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @Scope
-public class UserService implements UserDetailsService {
-
+public class UserService {
 	private final UserRepository userRepository;
-	private final PasswordEncoder passwordEncoder;
 
-	public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+	public UserService(UserRepository userRepository) {
 		this.userRepository = userRepository;
-		this.passwordEncoder = passwordEncoder;
+	}
+
+	public Set<Group> getGroupsForUser() {
+		Optional<User> user = userRepository.findByEmail(String.valueOf(SecurityContextHolder.getContext().getAuthentication().getPrincipal()));
+		if (user.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+		}
+		return user.get().getGroups();
 	}
 
 	@Transactional
-	public ResponseEntity<String> saveNewUser(LoginCredentials user) {
-		Optional<User> test = userRepository.findByEmail(user.getEmail());
-		if (test.isPresent()) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).body("User already exists");
+	public User updateUser(User user) {
+		Optional<User> test = userRepository.findByEmail(String.valueOf(SecurityContextHolder.getContext().getAuthentication().getPrincipal()));
+		if (test.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
 		}
-		User userToSave = new User(user.getEmail(), passwordEncoder.encode(user.getPassword()));
-		userRepository.save(userToSave);
-		return ResponseEntity.status(HttpStatus.OK).body("Successfully registered");
-
+		if (user.getId() != test.get().getId() && user.getId() != 0) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User don't have access to entity");
+		}
+		User newUser = new User(test.get(), user);
+		return userRepository.save(newUser);
 	}
-
-	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		return userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-	}
-
 }

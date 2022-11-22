@@ -1,6 +1,6 @@
 package com.zam.rks.controller;
 
-import com.zam.rks.Service.UserService;
+import com.zam.rks.Service.LoginService;
 import com.zam.rks.model.LoginCredentials;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class LoginController {
 
-	private final UserService userService;
+	private final LoginService loginService;
 
-	public LoginController(UserService userService) {
-		this.userService = userService;
+	public LoginController(LoginService loginService) {
+		this.loginService = loginService;
 	}
 
 	@PostMapping("/login")
@@ -23,7 +23,7 @@ public class LoginController {
 
 	@PutMapping("/register")
 	public ResponseEntity<String> register(@RequestBody LoginCredentials user) {
-		return userService.saveNewUser(user);
+		return loginService.saveNewUser(user);
 	}
 
 }
