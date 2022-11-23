@@ -12,8 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -37,7 +35,7 @@ public class GroupService {
 		Group group = groupRepository.save(new Group(groupName));
 		Optional<User> user = userRepository.findByEmail(String.valueOf(SecurityContextHolder.getContext().getAuthentication().getPrincipal()));
 		if (user.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User not found");
 		}
 		group.addUser(user.get());
 		groupRepository.save(group);
@@ -45,10 +43,10 @@ public class GroupService {
 	}
 
 	@Transactional
-	public List<Group> getGroupById(int id) {
+	public Group getGroupById(int id) {
 		Optional<User> test = userRepository.findByEmail(String.valueOf(SecurityContextHolder.getContext().getAuthentication().getPrincipal()));
 		if (test.isEmpty()) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User not found");
 		}
 		User user = test.get();
 		Optional<Group> group = groupRepository.findById(id);
@@ -56,12 +54,12 @@ public class GroupService {
 			if (user.getGroups().contains(group.get())) {
 				user.setSelectedGroup(group.get());
 				userRepository.save(user);
-				return Collections.singletonList(group.get());
+				return group.get();
 			} else {
 				throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User don't have access to this group");
 			}
 		} else {
-			return Collections.emptyList();
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found");
 		}
 	}
 

@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 public class GroupController {
 
@@ -27,7 +25,7 @@ public class GroupController {
 	}
 
 	@GetMapping("/group/{id}")
-	public List<Group> getGroupById(@PathVariable int id) {
+	public Group getGroupById(@PathVariable int id) {
 		return groupService.getGroupById(id);
 	}
 

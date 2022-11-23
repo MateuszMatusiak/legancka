@@ -1,8 +1,10 @@
 package com.zam.rks.Service;
 
-import com.zam.rks.Dto.GroupDto;
-import com.zam.rks.Dto.Mapper.GroupDtoMapper;
+import com.zam.rks.Dto.EventDto;
+import com.zam.rks.Dto.Mapper.EventDtoMapper;
+import com.zam.rks.Repository.EventRepository;
 import com.zam.rks.Repository.UserRepository;
+import com.zam.rks.model.Event;
 import com.zam.rks.model.User;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
@@ -16,31 +18,34 @@ import java.util.Set;
 
 @Service
 @Scope
-public class UserService {
+public class EventService {
+	private final EventRepository eventRepository;
 	private final UserRepository userRepository;
 
-	public UserService(UserRepository userRepository) {
+	public EventService(EventRepository eventRepository, UserRepository userRepository) {
+		this.eventRepository = eventRepository;
 		this.userRepository = userRepository;
 	}
 
-	public Set<GroupDto> getGroupsForUser() {
-		Optional<User> user = userRepository.findByEmail(String.valueOf(SecurityContextHolder.getContext().getAuthentication().getPrincipal()));
-		if (user.isEmpty()) {
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User not found");
-		}
-		return GroupDtoMapper.mapGroupsToDto(user.get().getGroups());
-	}
+	public Event createEvent(Event e) {
+		Event newEvent = new Event(e);
 
-	@Transactional
-	public User updateUser(User user) {
 		Optional<User> test = userRepository.findByEmail(String.valueOf(SecurityContextHolder.getContext().getAuthentication().getPrincipal()));
 		if (test.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User not found");
 		}
-		if (user.getId() != test.get().getId() && user.getId() != 0) {
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User don't have access to entity");
+		User user = test.get();
+		newEvent.addUser(user);
+
+		return eventRepository.save(newEvent);
+	}
+
+	@Transactional
+	public Set<EventDto> getEventsForUser() {
+		Optional<User> test = userRepository.findByEmail(String.valueOf(SecurityContextHolder.getContext().getAuthentication().getPrincipal()));
+		if (test.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User not found");
 		}
-		User newUser = new User(test.get(), user);
-		return userRepository.save(newUser);
+		return EventDtoMapper.mapEventsToDto(test.get().getEvents());
 	}
 }

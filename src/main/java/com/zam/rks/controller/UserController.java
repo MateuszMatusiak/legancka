@@ -1,7 +1,7 @@
 package com.zam.rks.controller;
 
+import com.zam.rks.Dto.GroupDto;
 import com.zam.rks.Service.UserService;
-import com.zam.rks.model.Group;
 import com.zam.rks.model.User;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +20,7 @@ public class UserController {
 	}
 
 	@GetMapping("/groups")
-	public Set<Group> getGroupsForUser() {
+	public Set<GroupDto> getGroupsForUser() {
 		return userService.getGroupsForUser();
 	}
 

@@ -2,6 +2,8 @@ package com.zam.rks.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,6 +31,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "m_user")
 public class User implements UserDetails {
@@ -43,17 +47,24 @@ public class User implements UserDetails {
 	private String lastName;
 	private Date birthdate;
 	private String phoneNumber;
-	@JsonIgnore
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "selected_group", referencedColumnName = "id")
+	@JsonIgnore
 	private Group selectedGroup;
 
-	@JsonIgnore
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "m_group_users",
 			joinColumns = @JoinColumn(name = "user_id"),
 			inverseJoinColumns = @JoinColumn(name = "group_id"))
+	@JsonIgnore
 	private Set<Group> groups = new HashSet<>();
+
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "m_event_users",
+			joinColumns = @JoinColumn(name = "user_id"),
+			inverseJoinColumns = @JoinColumn(name = "event_id"))
+	@JsonIgnore
+	private Set<Event> events = new HashSet<>();
 	@JsonIgnore
 	@Column(columnDefinition = "TIMESTAMP default CURRENT_TIMESTAMP")
 	private Timestamp creationTime;
@@ -98,70 +109,14 @@ public class User implements UserDetails {
 	public User() {
 	}
 
-	public int getId() {
-		return id;
-	}
-
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return Collections.singleton(new SimpleGrantedAuthority(role.name()));
-
 	}
 
-	public Group getSelectedGroup() {
-		return selectedGroup;
-	}
-
-	public void setSelectedGroup(Group selectedGroup) {
-		this.selectedGroup = selectedGroup;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
+	@Override
 	public String getUsername() {
 		return email;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
-	public Date getBirthdate() {
-		return birthdate;
-	}
-
-	public void setBirthdate(Date birthdate) {
-		this.birthdate = birthdate;
-	}
-
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
-
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
-	}
-
-	public Timestamp getCreationTime() {
-		return creationTime;
 	}
 
 	public boolean isAccountNonExpired() {
@@ -169,7 +124,7 @@ public class User implements UserDetails {
 	}
 
 	public boolean isAccountNonLocked() {
-		return true;
+		return !locked;
 	}
 
 	public boolean isCredentialsNonExpired() {
@@ -178,21 +133,5 @@ public class User implements UserDetails {
 
 	public boolean isEnabled() {
 		return enabled;
-	}
-
-	public UserRole getRole() {
-		return role;
-	}
-
-	public void setRole(UserRole role) {
-		this.role = role;
-	}
-
-	public Set<Group> getGroups() {
-		return groups;
-	}
-
-	public void setGroups(Set<Group> groups) {
-		this.groups = groups;
 	}
 }
