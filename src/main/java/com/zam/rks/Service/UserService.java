@@ -1,6 +1,8 @@
 package com.zam.rks.Service;
 
+import com.zam.rks.Dto.EventDto;
 import com.zam.rks.Dto.GroupDto;
+import com.zam.rks.Dto.Mapper.EventDtoMapper;
 import com.zam.rks.Dto.Mapper.GroupDtoMapper;
 import com.zam.rks.Repository.UserRepository;
 import com.zam.rks.model.User;
@@ -42,5 +44,13 @@ public class UserService {
 		}
 		User newUser = new User(test.get(), user);
 		return userRepository.save(newUser);
+	}
+
+	public Set<EventDto> getEventsForUser() {
+		Optional<User> test = userRepository.findByEmail(String.valueOf(SecurityContextHolder.getContext().getAuthentication().getPrincipal()));
+		if (test.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User not found");
+		}
+		return EventDtoMapper.mapEventsToDto(test.get().getEvents());
 	}
 }

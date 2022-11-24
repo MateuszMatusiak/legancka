@@ -1,7 +1,5 @@
 package com.zam.rks.Service;
 
-import com.zam.rks.Dto.EventDto;
-import com.zam.rks.Dto.Mapper.EventDtoMapper;
 import com.zam.rks.Repository.EventRepository;
 import com.zam.rks.Repository.UserRepository;
 import com.zam.rks.model.Event;
@@ -12,9 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.transaction.Transactional;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 @Scope
@@ -40,12 +36,4 @@ public class EventService {
 		return eventRepository.save(newEvent);
 	}
 
-	@Transactional
-	public Set<EventDto> getEventsForUser() {
-		Optional<User> test = userRepository.findByEmail(String.valueOf(SecurityContextHolder.getContext().getAuthentication().getPrincipal()));
-		if (test.isEmpty()) {
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User not found");
-		}
-		return EventDtoMapper.mapEventsToDto(test.get().getEvents());
-	}
 }
