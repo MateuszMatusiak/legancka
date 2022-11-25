@@ -47,6 +47,7 @@ public class User implements UserDetails {
 	private String lastName;
 	private Date birthdate;
 	private String phoneNumber;
+	private String nickname;
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "selected_group", referencedColumnName = "id")
 	@JsonIgnore
@@ -85,6 +86,7 @@ public class User implements UserDetails {
 		this.lastName = newUser.lastName.isEmpty() ? oldUser.lastName : newUser.lastName;
 		this.birthdate = newUser.birthdate == null ? oldUser.birthdate : newUser.birthdate;
 		this.phoneNumber = newUser.phoneNumber.isEmpty() ? oldUser.phoneNumber : newUser.phoneNumber;
+		this.nickname = newUser.nickname.isEmpty() ? oldUser.nickname : newUser.nickname;
 
 		this.selectedGroup = oldUser.selectedGroup;
 		this.role = oldUser.role;
@@ -100,6 +102,7 @@ public class User implements UserDetails {
 		this.lastName = "";
 		this.birthdate = null;
 		this.phoneNumber = "";
+		this.nickname = "";
 		this.selectedGroup = null;
 		this.role = UserRole.ROLE_USER;
 		this.enabled = true;
@@ -112,6 +115,10 @@ public class User implements UserDetails {
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return Collections.singleton(new SimpleGrantedAuthority(role.name()));
+	}
+
+	public String getRole() {
+		return role.toString();
 	}
 
 	@Override

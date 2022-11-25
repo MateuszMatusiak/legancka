@@ -1,5 +1,6 @@
 package com.zam.rks.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,6 +30,7 @@ public class Dictionary {
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "group_id", referencedColumnName = "id")
+	@JsonIgnore
 	private Group group;
 	@Column(columnDefinition = "TIMESTAMP default CURRENT_TIMESTAMP")
 	private Timestamp creationTime;

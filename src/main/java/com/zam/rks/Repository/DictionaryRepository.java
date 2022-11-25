@@ -1,6 +1,7 @@
 package com.zam.rks.Repository;
 
 import com.zam.rks.model.Dictionary;
+import com.zam.rks.model.Group;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,4 +17,6 @@ public interface DictionaryRepository extends JpaRepository<Dictionary, Integer>
 	List<Dictionary> findByEntryLike(@Param("entry") String entry);
 
 	Optional<Dictionary> findByEntry(String entry);
+
+	List<Dictionary> findAllByGroup(Group group);
 }

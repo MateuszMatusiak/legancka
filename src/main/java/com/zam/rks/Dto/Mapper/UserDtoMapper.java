@@ -12,7 +12,7 @@ public class UserDtoMapper {
 		return users.stream().map(UserDtoMapper::mapToDto).collect(Collectors.toSet());
 	}
 
-	private static UserDto mapToDto(User user) {
+	public static UserDto mapToDto(User user) {
 		return UserDto.builder()
 				.id(user.getId())
 				.email(user.getEmail())
@@ -20,6 +20,8 @@ public class UserDtoMapper {
 				.lastName(user.getLastName())
 				.birthdate(user.getBirthdate())
 				.phoneNumber(user.getPhoneNumber())
+				.nickname(user.getNickname())
+				.role(user.getRole())
 				.build();
 	}
 }

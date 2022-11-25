@@ -4,6 +4,7 @@ import com.zam.rks.Repository.GroupRepository;
 import com.zam.rks.Repository.UserRepository;
 import com.zam.rks.model.Group;
 import com.zam.rks.model.User;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,17 +15,13 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.transaction.Transactional;
 import java.util.Optional;
 
+@AllArgsConstructor
 @Service
 @Scope
 public class GroupService {
 
 	private final GroupRepository groupRepository;
 	private final UserRepository userRepository;
-
-	public GroupService(GroupRepository groupRepository, UserRepository userRepository) {
-		this.groupRepository = groupRepository;
-		this.userRepository = userRepository;
-	}
 
 	@Transactional
 	public ResponseEntity<String> createNewGroup(String groupName) {

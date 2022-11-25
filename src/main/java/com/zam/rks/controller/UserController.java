@@ -2,6 +2,7 @@ package com.zam.rks.controller;
 
 import com.zam.rks.Dto.EventDto;
 import com.zam.rks.Dto.GroupDto;
+import com.zam.rks.Dto.UserDto;
 import com.zam.rks.Service.UserService;
 import com.zam.rks.model.User;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +29,11 @@ public class UserController {
 	@PostMapping("/user")
 	public User updateUser(@RequestBody User user) {
 		return userService.updateUser(user);
+	}
+
+	@GetMapping("/user")
+	public UserDto getUser() {
+		return userService.getUser();
 	}
 
 	@GetMapping("/events")

@@ -4,6 +4,8 @@ import com.zam.rks.Dto.EventDto;
 import com.zam.rks.Dto.GroupDto;
 import com.zam.rks.Dto.Mapper.EventDtoMapper;
 import com.zam.rks.Dto.Mapper.GroupDtoMapper;
+import com.zam.rks.Dto.Mapper.UserDtoMapper;
+import com.zam.rks.Dto.UserDto;
 import com.zam.rks.Repository.UserRepository;
 import com.zam.rks.model.User;
 import org.springframework.context.annotation.Scope;
@@ -44,6 +46,14 @@ public class UserService {
 		}
 		User newUser = new User(test.get(), user);
 		return userRepository.save(newUser);
+	}
+
+	public UserDto getUser() {
+		Optional<User> test = userRepository.findByEmail(String.valueOf(SecurityContextHolder.getContext().getAuthentication().getPrincipal()));
+		if (test.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+		}
+		return UserDtoMapper.mapToDto(test.get());
 	}
 
 	public Set<EventDto> getEventsForUser() {
