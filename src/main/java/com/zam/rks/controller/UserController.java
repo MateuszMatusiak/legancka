@@ -10,11 +10,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Set;
 
 @RestController
+@RequestMapping("/user")
 public class UserController {
 
 	private final UserService userService;
@@ -28,12 +30,12 @@ public class UserController {
 		return userService.getGroupsForUser();
 	}
 
-	@PostMapping("/user")
+	@PostMapping
 	public User updateUser(@RequestBody UserDto user) {
 		return userService.updateUser(user);
 	}
 
-	@GetMapping("/user")
+	@GetMapping
 	public UserDto getUser() {
 		return userService.getUser();
 	}
@@ -43,7 +45,7 @@ public class UserController {
 		return userService.getEventsForUser();
 	}
 
-	@PostMapping("/user/group/{id}")
+	@PostMapping("/group/{id}")
 	public Group setGroupById(@PathVariable int id) {
 		return userService.setGroupById(id);
 	}

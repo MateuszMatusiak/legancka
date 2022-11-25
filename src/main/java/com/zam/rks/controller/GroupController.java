@@ -9,11 +9,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Set;
 
 @RestController
+@RequestMapping("/group")
 public class GroupController {
 
 	private final GroupService groupService;
@@ -22,17 +24,17 @@ public class GroupController {
 		this.groupService = groupService;
 	}
 
-	@PutMapping("/group")
+	@PutMapping
 	public ResponseEntity<String> createNewGroup(@RequestBody String groupName) {
 		return groupService.createNewGroup(groupName);
 	}
 
-	@PostMapping("/group/{id}")
+	@PostMapping("/{id}")
 	public Group updateGroupById(@PathVariable int id, @RequestBody Group group) {
 		return groupService.updateGroupById(id, group);
 	}
 
-	@GetMapping("/group/{id}/users")
+	@GetMapping("/{id}/users")
 	public Set<UserDto> getUsersForGroup(@PathVariable int id) {
 		return groupService.getUsersForGroup(id);
 	}

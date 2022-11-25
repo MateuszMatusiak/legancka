@@ -1,5 +1,6 @@
 package com.zam.rks.Dto;
 
+import com.zam.rks.model.MapModel;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -13,6 +14,5 @@ public class EventDto implements Serializable {
 	private String name;
 	private Date startDate;
 	private Date endDate;
-	private String localization;
-
+	private MapModel localization;
 }

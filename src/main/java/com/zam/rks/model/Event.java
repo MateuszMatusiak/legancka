@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.lang.NonNull;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -13,6 +14,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.sql.Date;
 import java.time.LocalDate;
@@ -31,8 +34,9 @@ public class Event {
 	@NonNull
 	private Date startDate;
 	private Date endDate;
-	//TODO: w momencie kiedy mapa będzie w pełni ogarnięta to podpiąć to pod nią
-	private String localization;
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "localization_id", referencedColumnName = "id")
+	private MapModel localization;
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "m_event_users",
 			joinColumns = @JoinColumn(name = "event_id"),
@@ -47,7 +51,7 @@ public class Event {
 		this.startDate = e.startDate;
 		this.endDate = e.endDate == null ? Date.valueOf(LocalDate.now()) : e.endDate;
 		this.users = e.users == null ? new HashSet<>() : e.users;
-		this.localization = e.localization == null ? "" : e.localization;
+		this.localization = e.localization;
 	}
 
 	public Event() {

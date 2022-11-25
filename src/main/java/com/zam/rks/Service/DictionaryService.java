@@ -36,7 +36,8 @@ public class DictionaryService {
 	public Dictionary insertEntry(Dictionary dictionary) {
 		Optional<Dictionary> test = dictionaryRepository.findByEntry(dictionary.getEntry());
 		if (test.isPresent()) {
-			throw new ResponseStatusException(HttpStatus.CONFLICT, "Entry exists");
+			if (test.get().getDescription().equals(dictionary.getDescription()))
+				throw new ResponseStatusException(HttpStatus.CONFLICT, "Entry exists");
 		}
 		Dictionary dictionaryToSave = new Dictionary(dictionary.getEntry(), dictionary.getDescription());
 		return dictionaryRepository.save(dictionaryToSave);
