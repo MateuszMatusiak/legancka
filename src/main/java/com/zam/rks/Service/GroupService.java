@@ -1,5 +1,7 @@
 package com.zam.rks.Service;
 
+import com.zam.rks.Dto.Mapper.UserDtoMapper;
+import com.zam.rks.Dto.UserDto;
 import com.zam.rks.Repository.GroupRepository;
 import com.zam.rks.Repository.UserRepository;
 import com.zam.rks.model.Group;
@@ -14,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 import java.util.Optional;
+import java.util.Set;
 
 @AllArgsConstructor
 @Service
@@ -40,27 +43,6 @@ public class GroupService {
 	}
 
 	@Transactional
-	public Group getGroupById(int id) {
-		Optional<User> test = userRepository.findByEmail(String.valueOf(SecurityContextHolder.getContext().getAuthentication().getPrincipal()));
-		if (test.isEmpty()) {
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User not found");
-		}
-		User user = test.get();
-		Optional<Group> group = groupRepository.findById(id);
-		if (group.isPresent()) {
-			if (user.getGroups().contains(group.get())) {
-				user.setSelectedGroup(group.get());
-				userRepository.save(user);
-				return group.get();
-			} else {
-				throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User don't have access to this group");
-			}
-		} else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found");
-		}
-	}
-
-	@Transactional
 	public Group updateGroupById(int id, Group group) {
 		Optional<Group> test = groupRepository.findById(id);
 		if (test.isEmpty()) {
@@ -70,5 +52,18 @@ public class GroupService {
 		return groupRepository.save(newGroup);
 
 
+	}
+
+	public Set<UserDto> getUsersForGroup(int id) {
+		Optional<User> test = userRepository.findByEmail(String.valueOf(SecurityContextHolder.getContext().getAuthentication().getPrincipal()));
+		if (test.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User not found");
+		}
+		Optional<Group> group = groupRepository.findById(id);
+		if(group.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found");
+		}
+
+		return UserDtoMapper.mapUsersToDto(group.get().getUsers());
 	}
 }

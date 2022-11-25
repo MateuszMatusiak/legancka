@@ -1,5 +1,7 @@
 package com.zam.rks.Dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.zam.rks.model.Group;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -17,4 +19,5 @@ public class UserDto implements Serializable {
 	private String phoneNumber;
 	private String nickname;
 	private String role;
+	private GroupDto selectedGroup;
 }

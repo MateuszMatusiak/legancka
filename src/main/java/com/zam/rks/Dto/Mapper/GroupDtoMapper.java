@@ -15,7 +15,7 @@ public class GroupDtoMapper {
 		return groups.stream().map(GroupDtoMapper::mapToDto).collect(Collectors.toSet());
 	}
 
-	private static GroupDto mapToDto(Group group) {
+	public static GroupDto mapToDto(Group group) {
 		return GroupDto.builder()
 				.id(group.getId())
 				.name(group.getName())

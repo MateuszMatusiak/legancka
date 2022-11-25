@@ -1,5 +1,6 @@
 package com.zam.rks.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,6 +29,7 @@ public class Group {
 	@JoinTable(name = "m_group_users",
 			joinColumns = @JoinColumn(name = "group_id"),
 			inverseJoinColumns = @JoinColumn(name = "user_id"))
+	@JsonIgnore
 	private Set<User> users = new HashSet<>();
 
 	public Group() {

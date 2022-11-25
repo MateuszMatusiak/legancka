@@ -6,8 +6,11 @@ import com.zam.rks.Dto.Mapper.EventDtoMapper;
 import com.zam.rks.Dto.Mapper.GroupDtoMapper;
 import com.zam.rks.Dto.Mapper.UserDtoMapper;
 import com.zam.rks.Dto.UserDto;
+import com.zam.rks.Repository.GroupRepository;
 import com.zam.rks.Repository.UserRepository;
+import com.zam.rks.model.Group;
 import com.zam.rks.model.User;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,14 +21,12 @@ import javax.transaction.Transactional;
 import java.util.Optional;
 import java.util.Set;
 
+@AllArgsConstructor
 @Service
 @Scope
 public class UserService {
 	private final UserRepository userRepository;
-
-	public UserService(UserRepository userRepository) {
-		this.userRepository = userRepository;
-	}
+	private final GroupRepository groupRepository;
 
 	public Set<GroupDto> getGroupsForUser() {
 		Optional<User> user = userRepository.findByEmail(String.valueOf(SecurityContextHolder.getContext().getAuthentication().getPrincipal()));
@@ -36,7 +37,7 @@ public class UserService {
 	}
 
 	@Transactional
-	public User updateUser(User user) {
+	public User updateUser(UserDto user) {
 		Optional<User> test = userRepository.findByEmail(String.valueOf(SecurityContextHolder.getContext().getAuthentication().getPrincipal()));
 		if (test.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User not found");
@@ -44,7 +45,8 @@ public class UserService {
 		if (user.getId() != test.get().getId() && user.getId() != 0) {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User don't have access to entity");
 		}
-		User newUser = new User(test.get(), user);
+		Group group = groupRepository.findById(user.getSelectedGroup().getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "Group not found"));
+		User newUser = new User(test.get(), user, group);
 		return userRepository.save(newUser);
 	}
 
@@ -62,5 +64,26 @@ public class UserService {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User not found");
 		}
 		return EventDtoMapper.mapEventsToDto(test.get().getEvents());
+	}
+
+	@Transactional
+	public Group setGroupById(int id) {
+		Optional<User> test = userRepository.findByEmail(String.valueOf(SecurityContextHolder.getContext().getAuthentication().getPrincipal()));
+		if (test.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User not found");
+		}
+		User user = test.get();
+		Optional<Group> group = groupRepository.findById(id);
+		if (group.isPresent()) {
+			if (user.getGroups().contains(group.get())) {
+				user.setSelectedGroup(group.get());
+				userRepository.save(user);
+				return group.get();
+			} else {
+				throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User don't have access to this group");
+			}
+		} else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found");
+		}
 	}
 }

@@ -2,6 +2,7 @@ package com.zam.rks.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.zam.rks.Dto.UserDto;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
@@ -50,7 +51,6 @@ public class User implements UserDetails {
 	private String nickname;
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "selected_group", referencedColumnName = "id")
-	@JsonIgnore
 	private Group selectedGroup;
 
 	@ManyToMany(fetch = FetchType.LAZY)
@@ -77,18 +77,18 @@ public class User implements UserDetails {
 	@JsonIgnore
 	private UserRole role;
 
-	public User(User oldUser, User newUser) {
+	public User(User oldUser, UserDto newUser, Group selectedGroup) {
 		this.id = oldUser.id;
 		this.email = oldUser.email;
 		this.password = oldUser.password;
 
-		this.firstName = newUser.firstName.isEmpty() ? oldUser.firstName : newUser.firstName;
-		this.lastName = newUser.lastName.isEmpty() ? oldUser.lastName : newUser.lastName;
-		this.birthdate = newUser.birthdate == null ? oldUser.birthdate : newUser.birthdate;
-		this.phoneNumber = newUser.phoneNumber.isEmpty() ? oldUser.phoneNumber : newUser.phoneNumber;
-		this.nickname = newUser.nickname.isEmpty() ? oldUser.nickname : newUser.nickname;
+		this.firstName = newUser.getFirstName().isEmpty() ? oldUser.firstName : newUser.getFirstName();
+		this.lastName = newUser.getLastName().isEmpty() ? oldUser.lastName : newUser.getLastName();
+		this.birthdate = newUser.getBirthdate() == null ? oldUser.birthdate : newUser.getBirthdate();
+		this.phoneNumber = newUser.getPhoneNumber().isEmpty() ? oldUser.phoneNumber : newUser.getPhoneNumber();
+		this.nickname = newUser.getNickname().isEmpty() ? oldUser.nickname : newUser.getNickname();
+		this.selectedGroup = selectedGroup;
 
-		this.selectedGroup = oldUser.selectedGroup;
 		this.role = oldUser.role;
 		this.enabled = oldUser.enabled;
 		this.creationTime = oldUser.creationTime;

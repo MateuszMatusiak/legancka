@@ -1,5 +1,6 @@
 package com.zam.rks.controller;
 
+import com.zam.rks.Dto.UserDto;
 import com.zam.rks.Service.GroupService;
 import com.zam.rks.model.Group;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Set;
 
 @RestController
 public class GroupController {
@@ -24,14 +27,14 @@ public class GroupController {
 		return groupService.createNewGroup(groupName);
 	}
 
-	@GetMapping("/group/{id}")
-	public Group getGroupById(@PathVariable int id) {
-		return groupService.getGroupById(id);
-	}
-
 	@PostMapping("/group/{id}")
 	public Group updateGroupById(@PathVariable int id, @RequestBody Group group) {
 		return groupService.updateGroupById(id, group);
+	}
+
+	@GetMapping("/group/{id}/users")
+	public Set<UserDto> getUsersForGroup(@PathVariable int id) {
+		return groupService.getUsersForGroup(id);
 	}
 
 }
