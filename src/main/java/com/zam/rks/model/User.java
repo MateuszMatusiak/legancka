@@ -2,7 +2,7 @@ package com.zam.rks.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.zam.rks.Dto.UserDto;
+import com.zam.rks.Dto.UpdateModel.UpdateUser;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
@@ -77,17 +77,17 @@ public class User implements UserDetails {
 	@JsonIgnore
 	private UserRole role;
 
-	public User(User oldUser, UserDto newUser, Group selectedGroup) {
+	public User(User oldUser, UpdateUser newUser) {
 		this.id = oldUser.id;
 		this.email = oldUser.email;
 		this.password = oldUser.password;
 
-		this.firstName = newUser.getFirstName().isEmpty() ? oldUser.firstName : newUser.getFirstName();
-		this.lastName = newUser.getLastName().isEmpty() ? oldUser.lastName : newUser.getLastName();
+		this.firstName = newUser.getFirstName() == null || newUser.getFirstName().isEmpty() ? oldUser.firstName : newUser.getFirstName();
+		this.lastName = newUser.getLastName() == null || newUser.getLastName().isEmpty() ? oldUser.lastName : newUser.getLastName();
 		this.birthdate = newUser.getBirthdate() == null ? oldUser.birthdate : newUser.getBirthdate();
-		this.phoneNumber = newUser.getPhoneNumber().isEmpty() ? oldUser.phoneNumber : newUser.getPhoneNumber();
-		this.nickname = newUser.getNickname().isEmpty() ? oldUser.nickname : newUser.getNickname();
-		this.selectedGroup = selectedGroup;
+		this.phoneNumber = newUser.getPhoneNumber() == null || newUser.getPhoneNumber().isEmpty() ? oldUser.phoneNumber : newUser.getPhoneNumber();
+		this.nickname = newUser.getNickname() == null || newUser.getNickname().isEmpty() ? oldUser.nickname : newUser.getNickname();
+		this.selectedGroup = oldUser.selectedGroup;
 
 		this.role = oldUser.role;
 		this.enabled = oldUser.enabled;

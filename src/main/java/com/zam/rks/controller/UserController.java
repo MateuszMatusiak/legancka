@@ -2,6 +2,7 @@ package com.zam.rks.controller;
 
 import com.zam.rks.Dto.EventDto;
 import com.zam.rks.Dto.GroupDto;
+import com.zam.rks.Dto.UpdateModel.UpdateUser;
 import com.zam.rks.Dto.UserDto;
 import com.zam.rks.Service.UserService;
 import com.zam.rks.model.Group;
@@ -31,7 +32,7 @@ public class UserController {
 	}
 
 	@PostMapping
-	public User updateUser(@RequestBody UserDto user) {
+	public User updateUser(@RequestBody UpdateUser user) {
 		return userService.updateUser(user);
 	}
 

@@ -5,6 +5,7 @@ import com.zam.rks.Dto.GroupDto;
 import com.zam.rks.Dto.Mapper.EventDtoMapper;
 import com.zam.rks.Dto.Mapper.GroupDtoMapper;
 import com.zam.rks.Dto.Mapper.UserDtoMapper;
+import com.zam.rks.Dto.UpdateModel.UpdateUser;
 import com.zam.rks.Dto.UserDto;
 import com.zam.rks.Repository.GroupRepository;
 import com.zam.rks.Repository.UserRepository;
@@ -37,16 +38,12 @@ public class UserService {
 	}
 
 	@Transactional
-	public User updateUser(UserDto user) {
+	public User updateUser(UpdateUser user) {
 		Optional<User> test = userRepository.findByEmail(String.valueOf(SecurityContextHolder.getContext().getAuthentication().getPrincipal()));
 		if (test.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User not found");
 		}
-		if (user.getId() != test.get().getId() && user.getId() != 0) {
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User don't have access to entity");
-		}
-		Group group = groupRepository.findById(user.getSelectedGroup().getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "Group not found"));
-		User newUser = new User(test.get(), user, group);
+		User newUser = new User(test.get(), user);
 		return userRepository.save(newUser);
 	}
 
