@@ -1,5 +1,7 @@
 package com.zam.rks.Service;
 
+import com.zam.rks.Dto.GroupDto;
+import com.zam.rks.Dto.Mapper.GroupDtoMapper;
 import com.zam.rks.Dto.Mapper.UserDtoMapper;
 import com.zam.rks.Dto.UserDto;
 import com.zam.rks.Repository.GroupRepository;
@@ -43,13 +45,13 @@ public class GroupService {
 	}
 
 	@Transactional
-	public Group updateGroupById(int id, Group group) {
+	public GroupDto updateGroupById(int id, Group group) {
 		Optional<Group> test = groupRepository.findById(id);
 		if (test.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found");
 		}
 		Group newGroup = new Group(group.getName());
-		return groupRepository.save(newGroup);
+		return GroupDtoMapper.mapToDto(groupRepository.save(newGroup));
 
 
 	}
@@ -60,7 +62,7 @@ public class GroupService {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User not found");
 		}
 		Optional<Group> group = groupRepository.findById(id);
-		if(group.isEmpty()) {
+		if (group.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found");
 		}
 

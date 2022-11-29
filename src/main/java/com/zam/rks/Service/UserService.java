@@ -5,11 +5,11 @@ import com.zam.rks.Dto.GroupDto;
 import com.zam.rks.Dto.Mapper.EventDtoMapper;
 import com.zam.rks.Dto.Mapper.GroupDtoMapper;
 import com.zam.rks.Dto.Mapper.UserDtoMapper;
-import com.zam.rks.Dto.UpdateModel.UpdateUser;
 import com.zam.rks.Dto.UserDto;
 import com.zam.rks.Repository.GroupRepository;
 import com.zam.rks.Repository.UserRepository;
 import com.zam.rks.model.Group;
+import com.zam.rks.model.UpdateModel.UpdateUser;
 import com.zam.rks.model.User;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Scope;
@@ -38,13 +38,14 @@ public class UserService {
 	}
 
 	@Transactional
-	public User updateUser(UpdateUser user) {
+	public UserDto updateUser(UpdateUser user) {
 		Optional<User> test = userRepository.findByEmail(String.valueOf(SecurityContextHolder.getContext().getAuthentication().getPrincipal()));
 		if (test.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User not found");
 		}
 		User newUser = new User(test.get(), user);
-		return userRepository.save(newUser);
+		User u = userRepository.save(newUser);
+		return UserDtoMapper.mapToDto(u);
 	}
 
 	public UserDto getUser() {

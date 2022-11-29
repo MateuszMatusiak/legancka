@@ -1,5 +1,6 @@
 package com.zam.rks.controller;
 
+import com.zam.rks.Dto.GroupDto;
 import com.zam.rks.Dto.UserDto;
 import com.zam.rks.Service.GroupService;
 import com.zam.rks.model.Group;
@@ -30,7 +31,7 @@ public class GroupController {
 	}
 
 	@PostMapping("/{id}")
-	public Group updateGroupById(@PathVariable int id, @RequestBody Group group) {
+	public GroupDto updateGroupById(@PathVariable int id, @RequestBody Group group) {
 		return groupService.updateGroupById(id, group);
 	}
 
