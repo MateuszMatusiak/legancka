@@ -14,6 +14,7 @@ public class MapDtoMapper {
 
 	public static MapDto mapToDto(MapModel model) {
 		return MapDto.builder()
+				.id(model.getId())
 				.name(model.getName())
 				.latitude(model.getLatitude())
 				.longitude(model.getLongitude())
