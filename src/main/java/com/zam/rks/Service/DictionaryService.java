@@ -29,7 +29,7 @@ public class DictionaryService {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User not found");
 		}
 		User user = test.get();
-		return dictionaryRepository.findAllByGroup(user.getSelectedGroup());
+		return dictionaryRepository.findAllByGroupOrderByEntryAsc(user.getSelectedGroup());
 	}
 
 	@Transactional
@@ -39,7 +39,7 @@ public class DictionaryService {
 			if (test.get().getDescription().equals(dictionary.getDescription()))
 				throw new ResponseStatusException(HttpStatus.CONFLICT, "Entry exists");
 		}
-		Dictionary dictionaryToSave = new Dictionary(dictionary.getEntry(), dictionary.getDescription());
+		Dictionary dictionaryToSave = new Dictionary(dictionary.getEntry().trim(), dictionary.getDescription().trim());
 		return dictionaryRepository.save(dictionaryToSave);
 	}
 }

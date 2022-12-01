@@ -1,7 +1,9 @@
 package com.zam.rks.controller;
 
+import com.zam.rks.Dto.CommentDto;
 import com.zam.rks.Dto.PostDto;
 import com.zam.rks.Service.PostService;
+import com.zam.rks.model.UpdateModel.UpdateComment;
 import com.zam.rks.model.UpdateModel.UpdatePost;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,5 +35,20 @@ public class PostController {
 	@PostMapping("/{id}")
 	public PostDto updatePost(@PathVariable int id, @RequestBody UpdatePost post) {
 		return postService.updatePost(id, post);
+	}
+
+	@GetMapping("/{id}/comments")
+	public Set<CommentDto> getComments(@PathVariable int id) {
+		return postService.getComments(id);
+	}
+
+	@PutMapping("/{id}/comment")
+	public CommentDto insertComment(@PathVariable int id, @RequestBody UpdateComment comment) {
+		return postService.insertComment(id, comment);
+	}
+
+	@PostMapping("/comment/{commentId}")
+	public CommentDto updateComment(@PathVariable int commentId, @RequestBody UpdateComment comment) {
+		return postService.updateComment(commentId, comment);
 	}
 }

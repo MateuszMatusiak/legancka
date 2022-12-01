@@ -3,7 +3,6 @@ package com.zam.rks.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.zam.rks.model.UpdateModel.UpdateUser;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
@@ -36,7 +35,6 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@EqualsAndHashCode
 @Table(name = "m_user")
 public class User implements UserDetails {
 

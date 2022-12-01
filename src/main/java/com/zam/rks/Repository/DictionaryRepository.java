@@ -18,5 +18,5 @@ public interface DictionaryRepository extends JpaRepository<Dictionary, Integer>
 
 	Optional<Dictionary> findByEntry(String entry);
 
-	List<Dictionary> findAllByGroup(Group group);
+	List<Dictionary> findAllByGroupOrderByEntryAsc(Group group);
 }

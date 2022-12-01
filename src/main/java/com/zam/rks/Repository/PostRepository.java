@@ -10,5 +10,5 @@ import java.util.Set;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Integer> {
 
-	Set<Post> findAllByGroup(Group group);
+	Set<Post> findAllByGroupOrderByDateDesc(Group group);
 }
