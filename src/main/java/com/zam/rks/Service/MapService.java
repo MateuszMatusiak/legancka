@@ -5,6 +5,7 @@ import com.zam.rks.Dto.Mapper.MapDtoMapper;
 import com.zam.rks.Repository.MapRepository;
 import com.zam.rks.Repository.UserRepository;
 import com.zam.rks.model.MapModel;
+import com.zam.rks.model.UpdateModel.UpdateMap;
 import com.zam.rks.model.User;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Scope;
@@ -37,7 +38,7 @@ public class MapService {
 		return MapDtoMapper.mapMapModelToDto(models);
 	}
 
-	public MapModel insertMapPoint(MapDto mapModel) {
+	public MapModel insertMapPoint(UpdateMap mapModel) {
 		Optional<User> test = userRepository.findByEmail(String.valueOf(SecurityContextHolder.getContext().getAuthentication().getPrincipal()));
 		if (test.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User not found");
@@ -47,7 +48,7 @@ public class MapService {
 		return mapRepository.save(newPoint);
 	}
 
-	public MapModel updateMapPoint(int id, MapDto mapModel) {
+	public MapModel updateMapPoint(int id, UpdateMap mapModel) {
 		MapModel point = mapRepository.findById(id)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Point not found"));
 		point.setName(mapModel.getName());

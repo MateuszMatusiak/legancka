@@ -3,6 +3,7 @@ package com.zam.rks.controller;
 import com.zam.rks.Dto.MapDto;
 import com.zam.rks.Service.MapService;
 import com.zam.rks.model.MapModel;
+import com.zam.rks.model.UpdateModel.UpdateMap;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,13 +32,13 @@ public class MapController {
 	}
 
 	@PutMapping("/point")
-	public MapModel insertMapPoint(@RequestBody MapDto mapModel) {
+	public MapModel insertMapPoint(@RequestBody UpdateMap mapModel) {
 		return mapService.insertMapPoint(mapModel);
 	}
 
 	@PostMapping("/point{id}")
 	public MapModel updateMapPoint(@PathVariable int id,
-								   @RequestBody MapDto mapModel) {
+								   @RequestBody UpdateMap mapModel) {
 		return mapService.updateMapPoint(id, mapModel);
 	}
 }
