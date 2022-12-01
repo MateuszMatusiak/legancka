@@ -26,7 +26,7 @@ public class MapController {
 	}
 
 	@GetMapping
-	public Set<MapModel> getMap() {
+	public Set<MapDto> getMap() {
 		return mapService.getMap();
 	}
 

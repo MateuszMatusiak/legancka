@@ -1,6 +1,7 @@
 package com.zam.rks.Service;
 
 import com.zam.rks.Dto.MapDto;
+import com.zam.rks.Dto.Mapper.MapDtoMapper;
 import com.zam.rks.Repository.MapRepository;
 import com.zam.rks.Repository.UserRepository;
 import com.zam.rks.model.MapModel;
@@ -26,13 +27,14 @@ public class MapService {
 		return mapRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "Point not found"));
 	}
 
-	public Set<MapModel> getMap() {
+	public Set<MapDto> getMap() {
 		Optional<User> test = userRepository.findByEmail(String.valueOf(SecurityContextHolder.getContext().getAuthentication().getPrincipal()));
 		if (test.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User not found");
 		}
 		User user = test.get();
-		return mapRepository.findAllByGroup(user.getSelectedGroup());
+		Set<MapModel> models = mapRepository.findAllByGroup(user.getSelectedGroup());
+		return MapDtoMapper.mapMapModelToDto(models);
 	}
 
 	public MapModel insertMapPoint(MapDto mapModel) {
