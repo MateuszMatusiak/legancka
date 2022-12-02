@@ -17,5 +17,5 @@ public class UserDto implements Serializable {
 	private String phoneNumber;
 	private String nickname;
 	private String role;
-	private GroupDto selectedGroup;
+	private int selectedGroupId;
 }
