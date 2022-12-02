@@ -1,6 +1,7 @@
 package com.zam.rks.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,6 +20,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
+@EqualsAndHashCode
 @Table(name = "m_group")
 public class Group {
 	@Id

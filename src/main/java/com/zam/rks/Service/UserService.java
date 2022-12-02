@@ -65,7 +65,7 @@ public class UserService {
 	}
 
 	@Transactional
-	public Group setGroupById(int id) {
+	public GroupDto setGroupById(int id) {
 		Optional<User> test = userRepository.findByEmail(String.valueOf(SecurityContextHolder.getContext().getAuthentication().getPrincipal()));
 		if (test.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User not found");
@@ -73,13 +73,9 @@ public class UserService {
 		User user = test.get();
 		Optional<Group> group = groupRepository.findById(id);
 		if (group.isPresent()) {
-			if (user.getGroups().contains(group.get())) {
-				user.setSelectedGroup(group.get());
-				userRepository.save(user);
-				return group.get();
-			} else {
-				throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User don't have access to this group");
-			}
+			user.setSelectedGroup(group.get());
+			userRepository.save(user);
+			return GroupDtoMapper.mapToDto(group.get());
 		} else {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found");
 		}
