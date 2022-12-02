@@ -22,7 +22,7 @@ public class UserDtoMapper {
 				.phoneNumber(user.getPhoneNumber())
 				.nickname(user.getNickname())
 				.role(user.getRole())
-				.selectedGroupId(user.getSelectedGroup().getId())
+				.selectedGroup(GroupDtoMapper.mapToDto(user.getSelectedGroup()))
 				.build();
 	}
 }
